@@ -18,6 +18,7 @@ body {
   display: flex;
   align-items: center;
   padding: 10px 20px;
+  position: relative;
 }
 .logo {
   font-size: 26px;
@@ -37,6 +38,7 @@ body {
   display: flex;
   gap: 20px;
   font-size: 14px;
+  align-items: center;
 }
 .cart {
   position: relative;
@@ -110,6 +112,11 @@ footer {
   padding: 15px;
   margin-top: 30px;
 }
+
+/* Cart Dropdown */
+#cart-dropdown ul li {
+  padding: 4px 0;
+}
 </style>
 </head>
 
@@ -123,7 +130,14 @@ footer {
   </div>
   <div class="nav-items">
     <div>Hello, Sign in<br><b>Account</b></div>
-    <div class="cart">🛒 Cart <span id="cart-count">0</span></div>
+    <div class="cart" onclick="toggleCartDropdown()">
+      🛒 Cart <span id="cart-count">0</span>
+      <div id="cart-dropdown" style="display:none; position:absolute; top:30px; right:0; background:white; color:black; width:250px; border:1px solid #ccc; border-radius:4px; padding:10px; z-index:100;">
+        <h4>Cart Items</h4>
+        <ul id="cart-items" style="list-style:none; padding-left:0; margin:0;"></ul>
+        <p id="cart-empty">Your cart is empty.</p>
+      </div>
+    </div>
   </div>
 </div>
 
@@ -143,32 +157,32 @@ footer {
 
   <div class="products">
 
-    <div class="card">
-      <img src="images/headphone.jpg">
+    <div class="card" data-id="headphones">
+      <img src="images/headphone.jpg" alt="Wireless Headphones">
       <h3>Wireless Headphones</h3>
       <p class="price">₹1,999</p>
-      <button onclick="addToCart()">Add to Cart</button>
+      <button onclick="addToCart('headphones')">Add to Cart</button>
     </div>
 
-    <div class="card">
-      <img src="images/watch.jpg">
+    <div class="card" data-id="watch">
+      <img src="images/watch.jpg" alt="Smart Watch">
       <h3>Smart Watch</h3>
       <p class="price">₹2,499</p>
-      <button onclick="addToCart()">Add to Cart</button>
+      <button onclick="addToCart('watch')">Add to Cart</button>
     </div>
 
-    <div class="card">
-      <img src="images/blutooth speaker.jpg">
+    <div class="card" data-id="speaker">
+      <img src="images/blutooth speaker.jpg" alt="Bluetooth Speaker">
       <h3>Bluetooth Speaker</h3>
       <p class="price">₹1,299</p>
-      <button onclick="addToCart()">Add to Cart</button>
+      <button onclick="addToCart('speaker')">Add to Cart</button>
     </div>
 
-    <div class="card">
-      <img src="images/laptop bag.jpg">
+    <div class="card" data-id="bag">
+      <img src="images/laptop bag.jpg" alt="Laptop Backpack">
       <h3>Laptop Backpack</h3>
       <p class="price">₹899</p>
-      <button onclick="addToCart()">Add to Cart</button>
+      <button onclick="addToCart('bag')">Add to Cart</button>
     </div>
 
   </div>
@@ -178,12 +192,69 @@ footer {
 © 2026 SmartKart | Amazon-style DevOps CI/CD Project
 </footer>
 
+<!-- Add to Cart Script -->
 <script>
-let count = 0;
-function addToCart() {
-  count++;
+// Load cart from localStorage or initialize
+let cart = JSON.parse(localStorage.getItem('smartkartCart')) || {};
+
+// Update cart counter in navbar
+function updateCartCount() {
+  let count = Object.values(cart).reduce((a,b) => a + b, 0);
   document.getElementById("cart-count").innerText = count;
+  renderCartDropdown();
 }
+
+// Render the cart dropdown
+function renderCartDropdown() {
+  const cartItemsUl = document.getElementById("cart-items");
+  const cartEmpty = document.getElementById("cart-empty");
+  cartItemsUl.innerHTML = ""; // Clear previous items
+
+  if(Object.keys(cart).length === 0) {
+    cartEmpty.style.display = "block";
+    return;
+  }
+
+  cartEmpty.style.display = "none";
+
+  for(let productId in cart) {
+    const li = document.createElement("li");
+    li.style.padding = "4px 0";
+    li.innerText = `${formatProductName(productId)} - Qty: ${cart[productId]}`;
+    cartItemsUl.appendChild(li);
+  }
+}
+
+// Add product to cart
+function addToCart(productId) {
+  if(cart[productId]) {
+    cart[productId]++;
+  } else {
+    cart[productId] = 1;
+  }
+  localStorage.setItem('smartkartCart', JSON.stringify(cart));
+  updateCartCount();
+}
+
+// Convert productId to readable name
+function formatProductName(id) {
+  switch(id) {
+    case "headphones": return "Wireless Headphones";
+    case "watch": return "Smart Watch";
+    case "speaker": return "Bluetooth Speaker";
+    case "bag": return "Laptop Backpack";
+    default: return id;
+  }
+}
+
+// Toggle dropdown visibility
+function toggleCartDropdown() {
+  const dropdown = document.getElementById("cart-dropdown");
+  dropdown.style.display = (dropdown.style.display === "none") ? "block" : "none";
+}
+
+// Initialize cart count on page load
+updateCartCount();
 </script>
 
 </body>
