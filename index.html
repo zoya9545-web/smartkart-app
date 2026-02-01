@@ -50,6 +50,60 @@ body {
   top: -8px;
   right: -10px;
 }
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>SmartKart – Online Shopping</title>
+
+<style>
+body {
+  margin: 0;
+  font-family: Arial, sans-serif;
+  background: #eaeded;
+}
+
+/* Navbar */
+.navbar {
+  background: #131921;
+  color: white;
+  display: flex;
+  align-items: center;
+  padding: 10px 20px;
+}
+.logo {
+  font-size: 26px;
+  font-weight: bold;
+  color: #f08804;
+}
+.search {
+  flex: 1;
+  margin: 0 20px;
+}
+.search input {
+  width: 100%;
+  padding: 8px;
+  font-size: 16px;
+}
+.nav-items {
+  display: flex;
+  gap: 20px;
+  font-size: 14px;
+}
+.cart {
+  position: relative;
+  cursor: pointer;
+}
+.cart span {
+  background: #f08804;
+  color: black;
+  border-radius: 50%;
+  padding: 2px 6px;
+  font-size: 12px;
+  position: absolute;
+  top: -8px;
+  right: -10px;
+}
 
 /* Categories */
 .categories {
@@ -74,6 +128,10 @@ body {
   background: white;
   padding: 15px;
   border-radius: 4px;
+  transition: transform 0.2s;
+}
+.card:hover {
+  transform: scale(1.03);
 }
 .card img {
   width: 100%;
@@ -113,11 +171,11 @@ footer {
 <div class="navbar">
   <div class="logo">SmartKart</div>
   <div class="search">
-    <input type="text" placeholder="Search Smartkart">
+    <input type="text" placeholder="Search SmartKart">
   </div>
   <div class="nav-items">
     <div>Hello, Sign in<br><b>Account</b></div>
-    <div class="cart">🛒 Cart <span>2</span></div>
+    <div class="cart">🛒 Cart <span id="cart-count">0</span></div>
   </div>
 </div>
 
@@ -134,42 +192,51 @@ footer {
 <!-- Products -->
 <div class="container">
   <h2>Recommended for You</h2>
+
   <div class="products">
 
     <div class="card">
-      <img src="https://via.placeholder.com/220">
+      <img src="images/headphones.jpg">
       <h3>Wireless Headphones</h3>
       <p class="price">₹1,999</p>
-      <button>Add to Cart</button>
+      <button onclick="addToCart()">Add to Cart</button>
     </div>
 
     <div class="card">
-      <img src="https://via.placeholder.com/220">
+      <img src="images/watch.jpg">
       <h3>Smart Watch</h3>
       <p class="price">₹2,499</p>
-      <button>Add to Cart</button>
+      <button onclick="addToCart()">Add to Cart</button>
     </div>
 
     <div class="card">
-      <img src="https://via.placeholder.com/220">
+      <img src="images/speaker.jpg">
       <h3>Bluetooth Speaker</h3>
       <p class="price">₹1,299</p>
-      <button>Add to Cart</button>
+      <button onclick="addToCart()">Add to Cart</button>
     </div>
 
     <div class="card">
-      <img src="https://via.placeholder.com/220">
+      <img src="images/bag.jpg">
       <h3>Laptop Backpack</h3>
       <p class="price">₹899</p>
-      <button>Add to Cart</button>
+      <button onclick="addToCart()">Add to Cart</button>
     </div>
 
   </div>
 </div>
 
 <footer>
-© 2026 SmartKart | Amazon-style CI/CD DevOps Project
+© 2026 SmartKart | Amazon-style DevOps CI/CD Project
 </footer>
+
+<script>
+let count = 0;
+function addToCart() {
+  count++;
+  document.getElementById("cart-count").innerText = count;
+}
+</script>
 
 </body>
 </html>
